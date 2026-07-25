@@ -1,0 +1,126 @@
+local function playSoundSafe(soundObj, timePos, speed, volume)
+	if not soundObj or not soundObj.Parent then
+		return
+	end
+
+	soundObj:Stop()
+	soundObj.TimePosition = timePos or 0
+	soundObj.PlaybackSpeed = speed or 1
+	soundObj.Volume = volume or 1
+	soundObj:Play()
+end
+
+function GitPNG(GithubImg, ImageName)
+	local url = GithubImg
+	if not isfile(ImageName .. ".png") then
+		local success, response = pcall(function()
+			return game:HttpGet(url)
+		end)
+		if success then
+			writefile(ImageName .. ".png", response)
+		else
+			error(": " .. response)
+		end
+	end
+	return (getcustomasset or getsynasset)(ImageName .. ".png")
+end
+
+local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "FlashOverlay"
+screenGui.IgnoreGuiInset = true 
+screenGui.Parent = playerGui
+
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(1, 0, 1, 0)
+frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+frame.BackgroundTransparency = 0 -- Start invisible
+frame.BorderSizePixel = 0
+frame.Parent = screenGui
+
+local cue2 = Instance.new("Sound")
+cue2.Parent = game.Workspace
+cue2.Name = "Spawn"
+cue2.SoundId = "rbxassetid://109582246349306"
+cue2.Volume = 1
+cue2.TimePosition = 0
+cue2.PlaybackSpeed = 1
+cue2:Play()
+
+local colors = {
+	Color3.fromRGB(160, 206, 255),
+	Color3.fromRGB(0, 123, 255),
+	Color3.fromRGB(0, 208, 255),
+	Color3.fromRGB(120, 174, 255),
+	Color3.fromRGB(255, 255, 255),
+	Color3.fromRGB(37, 84, 255),
+	Color3.fromRGB(133, 255, 237)
+}
+
+local rebound = Instance.new("ImageLabel")
+rebound.Image = GitPNG("https://github.com/eoyoustme/Fragmentend-Reiginited/blob/main/Images_big_man_render2.png?raw=true", "Ridonc")
+rebound.Size = UDim2.new(0, 600, 0, 600)
+rebound.Position = UDim2.new(0.5, 0, 0.5, 0)
+rebound.AnchorPoint = Vector2.new(0.5, 0.5)
+rebound.Parent = screenGui
+rebound.BackgroundTransparency = 1
+rebound.ResampleMode = Enum.ResamplerMode.Pixelated
+rebound.ImageTransparency = 0
+rebound.ZIndex = 1000
+
+local c = task.spawn(function()
+	while true do
+		wait(0.067)				
+		frame.BackgroundColor3 = colors[math.random(1, #colors)]
+		rebound.ImageColor3 = colors[math.random(1, #colors)]
+	end
+end)
+
+local TweenService = game:GetService("TweenService")
+local rng = Random.new() 
+local tweenInfo = TweenInfo.new(0, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+local a = task.spawn(function()
+	while true do
+		game.TweenService:Create(rebound, tweenInfo, {
+			Position = UDim2.new(0.5, 0, 0.5, 0) + UDim2.new(0, math.random(-60, 60), 0, math.random(-60, 60)),
+			Rotation = math.random(-50, 50),
+
+			Size = UDim2.new(0, rng:NextNumber(500, 300), 0, rng:NextNumber(250, 700))
+		}):Play()
+
+		task.wait(0.05)
+	end
+end)
+
+local b = task.spawn(function()
+	while true do
+		playSoundSafe(cue2, 0.25 + math.random() / 10, math.random(25, 105) / 100, 1)
+		task.wait(0.06)
+	end
+end)
+
+wait(math.random(0.6,1.6))
+
+
+
+task.cancel(c)
+task.cancel(a)
+task.cancel(b)
+local oldBackTween = TweenService:Create(rebound, TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+	Position = UDim2.new(0.5, 0, 0.5, 0),
+	Size = UDim2.new(0, 1500, 0, 1700),
+	Rotation = 0
+})
+oldBackTween:Play()
+
+wait(0.25)
+local cac = TweenService:Create(rebound, TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+	ImageTransparency = 1
+
+})
+cac:Play()
+frame:Destroy()
+wait(0.5)
+frame:Destroy()
+cue2:Destroy()
