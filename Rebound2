@@ -40,7 +40,7 @@ local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/Regul
 
 local entity = Spawner:Create({
 	Entity = {
-		Name = "Rebound1",
+		Name = "Rebound2",
 		Asset = "https://github.com/eoyoustme/Endless-Doors/blob/main/Rebound.rbxm?raw=true",
 		HeightOffset = 1
 	},
@@ -98,7 +98,7 @@ entity:SetCallback("OnSpawned", function()
 	light(2, Color3.fromRGB(85, 170, 255), Color3.fromRGB(65, 138, 255))
 
 	-- Tìm Rebound an toàn bằng WaitForChild để tránh lỗi nil
-	local reboundModel = game.Workspace:WaitForChild("Rebound1", 5)
+	local reboundModel = game.Workspace:WaitForChild("Rebound2", 5)
 	local reboundRoot = reboundModel and reboundModel:WaitForChild("Root", 3)
 
 	local function GetGitSound(GithubSnd, SoundName)
