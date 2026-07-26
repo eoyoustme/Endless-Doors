@@ -1,13 +1,6 @@
 local rng = Random.new()
 local ai = rng:NextInteger(35, 1050)
 
-task.spawn(function()
-	while true do
-		task.wait(0.1)
-		ai = rng:NextInteger(35, 1050)
-	end
-end)
-
 function light(tim, color0, color1)
 	local tweenservice = game:GetService("TweenService")
 	local info = TweenInfo.new(tim, Enum.EasingStyle.Linear)
@@ -134,6 +127,34 @@ end)
 entity:SetCallback("OnEnterRoom", function(room: Model, firstTime: boolean)
 	if firstTime then
 		print("Entity has entered room: ".. room.Name.. " for the first time")
+		if ai >= 700 then
+			local RunService = game:GetService("RunService")
+			local TweenService = game:GetService("TweenService")
+
+			local entityModel = workspace:FindFirstChild("Rebound2")
+			local entityRoot = entityModel and (entityModel:FindFirstChild("HumanoidRootPart") or entityModel:FindFirstChildWhichIsA("BasePart")) 
+
+			if entityRoot then
+				local freezeConnection
+				local doorFreezePos = entityRoot.CFrame
+
+				freezeConnection = RunService.Heartbeat:Connect(function()
+					if entityModel and entityModel.Parent and entityRoot then
+						entityRoot.Anchored = true
+						entityRoot.CFrame = doorFreezePos
+						entityRoot.AssemblyLinearVelocity = Vector3.zero
+						entityRoot.AssemblyAngularVelocity = Vector3.zero
+					end
+				end)
+
+				wait(1)
+
+				if freezeConnection then
+					freezeConnection:Disconnect()
+				end
+			end
+
+		end
 	else
 		print("Entity has entered room: ".. room.Name.. " again")
 	end
