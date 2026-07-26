@@ -134,6 +134,34 @@ end)
 entity:SetCallback("OnEnterRoom", function(room: Model, firstTime: boolean)
 	if firstTime then
 		print("Entity has entered room: ".. room.Name.. " for the first time")
+		if ai >= 700 then
+			local RunService = game:GetService("RunService")
+			local TweenService = game:GetService("TweenService")
+
+			local entityModel = workspace:FindFirstChild("Rebound3")
+			local entityRoot = entityModel and (entityModel:FindFirstChild("HumanoidRootPart") or entityModel:FindFirstChildWhichIsA("BasePart")) 
+
+			if entityRoot then
+				local freezeConnection
+				local doorFreezePos = entityRoot.CFrame
+
+				freezeConnection = RunService.Heartbeat:Connect(function()
+					if entityModel and entityModel.Parent and entityRoot then
+						entityRoot.Anchored = true
+						entityRoot.CFrame = doorFreezePos
+						entityRoot.AssemblyLinearVelocity = Vector3.zero
+						entityRoot.AssemblyAngularVelocity = Vector3.zero
+					end
+				end)
+
+				wait(1)
+
+				if freezeConnection then
+					freezeConnection:Disconnect()
+				end
+			end
+
+		end
 	else
 		print("Entity has entered room: ".. room.Name.. " again")
 	end
