@@ -90,6 +90,16 @@ local entityList = {
 		name = "OverSeer",
 		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Overseer",
 		chance = 5
+	},
+	{
+		name = "Checker",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Checker",
+		chance = 6
+	},
+	{
+		name = "Claim",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Claim",
+		chance = randomFloat(1,11)
 	}
 }
 
