@@ -10,7 +10,7 @@ local roast = Instance.new("Sound")
 roast.Parent = workspace
 roast.Name = "roast"
 roast.SoundId = "rbxassetid://9125936117"
-roast.Volume = 0.5
+roast.Volume = 10
 roast.Pitch = 3
 roast:Play()
 
