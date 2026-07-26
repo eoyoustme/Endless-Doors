@@ -50,7 +50,7 @@ local entity = Spawner:Create({
 	},
 	Movement = {
 		Speed = 105,
-		Delay = delayTime, -- Sửa thành số nguyên
+		Delay = delayTime, 
 		Reversed = true
 	},
 	Rebounding = {
