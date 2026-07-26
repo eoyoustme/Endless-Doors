@@ -1,0 +1,156 @@
+require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Mode make by Rebound Fan (Og Hunger(New)", true)
+
+
+local gameData = game:GetService("ReplicatedStorage"):WaitForChild("GameData")
+local latestRoom = gameData:WaitForChild("LatestRoom")
+local lastroom = game.ReplicatedStorage.GameData.LatestRoom
+
+local roomConnection
+
+roomConnection = latestRoom.Changed:Connect(function(roomValue)
+	if roomValue == 1 then
+		local character = game.Players.LocalPlayer.Character
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+
+		if humanoid then
+			humanoid.Health = 0
+		end
+	end
+end)
+
+
+game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
+roomConnection:Disconnect()
+
+require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption("Endless Doors Mode Had Actived", true)
+
+task.spawn(function()
+	pcall(function()
+		loadstring(game:HttpGet("https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Stamina"))()
+
+		local a1 = ({
+			"Pro Tips : /God on chat for God Mode",
+			"Look Behind u",
+			"Fun Fact about dream : You can't run from him"
+		})[math.random(3)]
+
+		require(game.Players.LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game).caption(a1, true)
+
+	end)
+end)
+
+
+task.spawn(function()
+	local workspace = game:GetService("Workspace")
+
+	local function applyWardrobePrompt(inst)
+		if inst:IsA("ProximityPrompt") and inst.Name == "HidePrompt" then
+			inst.HoldDuration = 0.5
+		elseif inst:IsA("Model") or inst:IsA("Folder") then
+			if string.find(inst.Name:lower(), "wardrobe") then
+				local prompt = inst:FindFirstChild("HidePrompt", true)
+				if prompt and prompt:IsA("ProximityPrompt") then
+					prompt.HoldDuration = 0.5
+				end
+			end
+		end
+	end
+
+	for _, desc in ipairs(workspace:GetDescendants()) do
+		applyWardrobePrompt(desc)
+	end
+
+	workspace.DescendantAdded:Connect(function(desc)
+		task.wait()
+		applyWardrobePrompt(desc)
+	end)
+end)
+
+local function randomFloat(min, max)
+	return min + math.random() * (max - min)
+end
+
+local entityList = {
+	{
+		name = "Matcher",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Matcher",
+		chance = 11
+	},
+	{
+		name = "Rebound",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Rebound",
+		chance = randomFloat(1, 2)
+	},
+	{
+		name = "Blink",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Blink",
+		chance = randomFloat(1, 1.5)
+	},
+	{
+		name = "OverSeer",
+		url = "https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Overseer",
+		chance = 5
+	}
+}
+
+
+local function rollChance(percent)
+	return (math.random() * 100) <= percent
+end
+
+local function spawnEntity(entityData)
+	pcall(function()
+		loadstring(game:HttpGet(entityData.url))()
+	end)
+end
+
+local function IsSeekActive()
+	local currentRooms = game.Workspace:FindFirstChild("CurrentRooms")
+	if not currentRooms then
+		return false
+	end
+
+	local namesToCheck = {
+		"Seek",
+		"SeekMoving",
+		"SeekMovingNewClone",
+		"SeekEntity",
+		"SeekDoor"
+	}
+
+	for _, name in ipairs(namesToCheck) do
+		if game.Workspace:FindFirstChild(name, true) or currentRooms:FindFirstChild(name, true) then
+			return true
+		end
+	end
+
+	for _, inst in ipairs(game.Workspace:GetDescendants()) do
+		if string.find(string.lower(inst.Name), "seek") then
+			return true
+		end
+	end
+
+	return false
+end
+
+math.randomseed(os.clock() * 30)
+
+while true do
+	task.wait(10)
+
+	if not IsSeekActive() then
+		local threads = {}
+
+		for _, entityData in ipairs(entityList) do
+			if rollChance(entityData.chance) then
+				table.insert(threads, entityData)
+			end
+		end
+
+		for _, entityData in ipairs(threads) do
+			task.spawn(function()
+				spawnEntity(entityData)
+			end)
+		end
+	end
+end
