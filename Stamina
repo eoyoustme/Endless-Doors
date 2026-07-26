@@ -1,0 +1,176 @@
+-- Create the ScreenGui and Sprint Bar
+local player = game:GetService("Players")
+local LocalPlayer = player.LocalPlayer
+local screenGui = Instance.new("ScreenGui")
+screenGui.IgnoreGuiInset = true
+screenGui.Parent = LocalPlayer.PlayerGui
+local userInputService = game:GetService("UserInputService")
+
+--------------------------------------------------------
+-- NEW STAMINA UI STRUCTURE (3 FRAMES)
+--------------------------------------------------------
+
+local HC_Sprintbar = Instance.new("Frame")
+HC_Sprintbar.Name = "HC_Sprintbar"
+HC_Sprintbar.Size = UDim2.new(0.129, 0,0.09, 0)
+HC_Sprintbar.Position = UDim2.new(0.008, 0,0.982, 0) 
+HC_Sprintbar.AnchorPoint = Vector2.new(0, 1)
+HC_Sprintbar.SizeConstraint = Enum.SizeConstraint.RelativeXY
+HC_Sprintbar.ZIndex = 1005
+HC_Sprintbar.BackgroundTransparency = 1 
+HC_Sprintbar.Parent = screenGui
+
+local hcPadding = Instance.new("UIPadding")
+hcPadding.PaddingBottom = UDim.new(0.3, -5)
+hcPadding.PaddingLeft = UDim.new(0.1, 0)
+hcPadding.PaddingRight = UDim.new(0.1, 0)
+hcPadding.PaddingTop = UDim.new(0.3, -5)
+hcPadding.Parent = HC_Sprintbar
+
+local outerBar = Instance.new("Frame")
+outerBar.Name = "Bar"
+outerBar.BackgroundColor3 = Color3.fromRGB(148, 180, 255)
+outerBar.BorderColor3 = Color3.fromRGB(27, 42, 53)
+outerBar.Position = UDim2.new(0.5, 0, 0.5, 0)
+outerBar.Size = UDim2.new(1, 0, 0.35, 0)
+outerBar.BackgroundTransparency = 0.7
+outerBar.AnchorPoint = Vector2.new(0.5, 0.5)
+outerBar.Parent = HC_Sprintbar
+
+local outerCorner = Instance.new("UICorner")
+outerCorner.CornerRadius = UDim.new(0.3, 0)
+outerCorner.Parent = outerBar
+
+local outerPadding = Instance.new("UIPadding")
+outerPadding.PaddingLeft = UDim.new(0, 3)
+outerPadding.PaddingRight = UDim.new(0, 3)
+outerPadding.PaddingTop = UDim.new(0, 3)
+outerPadding.PaddingBottom = UDim.new(0, 3)
+outerPadding.Parent = outerBar
+
+local outerStroke = Instance.new("UIStroke")
+outerStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+outerStroke.Color = Color3.fromRGB(148, 180, 255)
+outerStroke.Thickness = 4
+outerStroke.Parent = outerBar
+
+local sprintBar = Instance.new("Frame")
+sprintBar.Name = "Bar"
+sprintBar.Size = UDim2.new(1, 0, 1, 0)
+sprintBar.Position = UDim2.new(0, 0, 0.5, 0)
+sprintBar.BackgroundColor3 = Color3.fromRGB(148, 180, 255)
+sprintBar.AnchorPoint = Vector2.new(0, 0.5)
+sprintBar.Parent = outerBar
+
+local innerCorner = Instance.new("UICorner")
+innerCorner.CornerRadius = UDim.new(0.25, 0)
+innerCorner.Parent = sprintBar
+
+local darkScreen = Instance.new("Frame")
+darkScreen.Size = UDim2.new(1, 0, 1, 0)
+darkScreen.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+darkScreen.BackgroundTransparency = 1
+darkScreen.Parent = screenGui
+
+local sprinting = false
+local maxStamina = 100
+local currentStamina = maxStamina
+local staminaRegenRate = 8
+local staminaDrainRate = 10
+local canSprint = true
+
+local function updateSprintBar()
+	sprintBar.Size = UDim2.new(currentStamina / maxStamina, 0, 1, 0)
+end
+
+local function updateDarkScreen()
+	if currentStamina < 100 then
+		local percent = math.clamp(1 - (currentStamina / 100), 0, 1)
+		darkScreen.BackgroundTransparency = 1 - (percent * 0.75)
+	else
+		darkScreen.BackgroundTransparency = 1
+	end
+end
+
+local runService = game:GetService("RunService")
+
+-- Hàm dùng chung để bật/tắt Sprint (tránh lặp lại code)
+local function toggleSprint()
+	local Character = LocalPlayer.Character
+	if Character and canSprint and currentStamina > 0 then
+		sprinting = not sprinting
+
+		if sprinting then
+			Character:SetAttribute("SpeedBoost", 5)
+		else
+			Character:SetAttribute("SpeedBoost", 0)
+		end
+	end
+end
+
+-- ==========================================
+-- 1. XỬ LÝ CHO THIẾT BỊ CÓ CẢM ỨNG (MOBILE)
+-- ==========================================
+if userInputService.TouchEnabled then
+	local sprintButton = Instance.new("ImageButton")
+	sprintButton.Size = UDim2.new(0.115, 0, 0.115, 0)
+	sprintButton.Position = UDim2.new(0.916, 0, 0.369, 0)
+	sprintButton.Image = "rbxassetid://76279457712916"
+	sprintButton.BackgroundColor3 = Color3.fromRGB(148, 180, 255)
+	sprintButton.BackgroundTransparency = 1
+	sprintButton.ImageTransparency = 0.4
+	sprintButton.Parent = screenGui
+
+	local buttonCorner = Instance.new("UICorner")
+	buttonCorner.CornerRadius = UDim.new(1, 0)
+	buttonCorner.Parent = sprintButton
+
+	sprintButton.MouseButton1Click:Connect(function()
+		toggleSprint()
+	end)
+end
+
+userInputService.InputBegan:Connect(function(input, gameProcessed)
+	if gameProcessed then return end 
+
+	if input.KeyCode == Enum.KeyCode.Q then
+		toggleSprint()
+	end
+end)
+
+-- ==========================================
+-- 3. VÒNG LẶP HỆ THỐNG (CHỈ CHẠY DUY NHẤT 1 VÒNG LẶP)
+-- ==========================================
+runService.Heartbeat:Connect(function(dt)
+	local Character = LocalPlayer.Character
+
+	if sprinting then
+		if currentStamina > 0 then
+			currentStamina -= staminaDrainRate * dt
+		else
+			sprinting = false
+			canSprint = false 
+			if Character then
+				Character:SetAttribute("SpeedBoost", 0)
+			end
+
+			-- Thông báo kiệt sức
+			local mainGame = LocalPlayer.PlayerGui.MainUI.Initiator.Main_Game
+			require(mainGame).caption("You're exhausted", true)
+			wait(1)
+		end
+	else
+		if currentStamina < maxStamina then
+			currentStamina += staminaRegenRate * dt
+		end
+	end
+
+	if currentStamina >= maxStamina then
+		canSprint = true
+	end
+
+	currentStamina = math.clamp(currentStamina, 0, maxStamina)
+
+	updateSprintBar()
+	updateDarkScreen()
+end)
