@@ -8,7 +8,7 @@ local entity = Spawner:Create({
 	Entity = {
 		Name = "Checker",
 		Asset = "https://github.com/eoyoustme/Endless-Doors/blob/main/Checker.rbxm?raw=true",
-		HeightOffset = 0.5
+		HeightOffset = 0
 	},
 	Lights = {
 		Flicker = {
