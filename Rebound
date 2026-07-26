@@ -1,10 +1,10 @@
 local rng = Random.new()
-local ai = rng:NextInteger(5, 250)
+local ai = rng:NextInteger(35, 1050)
 
 task.spawn(function()
 	while true do
 		task.wait(0.1)
-		ai = rng:NextInteger(5, 250)
+		ai = rng:NextInteger(35, 1050)
 	end
 end)
 
@@ -75,7 +75,7 @@ pcall(function()
 end)
 
 -- Delay là 1 con số cụ thể (ví dụ: 2 giây) thay vì một bảng
-local delayTime = 2 
+local delayTime = Random.new():NextInteger(0.01 , 2)
 task.wait(2.8)
 
 ---====== Load spawner ======---
