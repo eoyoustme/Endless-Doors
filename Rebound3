@@ -1,13 +1,6 @@
 local rng = Random.new()
 local ai = rng:NextInteger(35, 1050)
 
-task.spawn(function()
-	while true do
-		task.wait(0.1)
-		ai = rng:NextInteger(35, 1050)
-	end
-end)
-
 function light(tim, color0, color1)
 	local tweenservice = game:GetService("TweenService")
 	local info = TweenInfo.new(tim, Enum.EasingStyle.Linear)
