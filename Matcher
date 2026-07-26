@@ -30,7 +30,7 @@ local entity = Spawner:Create({
 	Entity = {
 		Name = "Matcher",
 		Asset = "https://github.com/eoyoustme/Endless-Doors/blob/main/Matcher.rbxm?raw=true",
-		HeightOffset = 1
+		HeightOffset = 0.5
 	},
 	Lights = {
 		Flicker = {
@@ -51,7 +51,7 @@ local entity = Spawner:Create({
 	Movement = {
 		Speed = 105,
 		Delay = delayTime, 
-		Reversed = true
+		Reversed = false
 	},
 	Rebounding = {
 		Enabled = false,
