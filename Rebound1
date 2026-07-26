@@ -1,10 +1,10 @@
 local rng = Random.new()
-local ai = rng:NextInteger(35, 250)
+local ai = rng:NextInteger(35, 1050)
 
 task.spawn(function()
 	while true do
 		task.wait(0.1)
-		ai = rng:NextInteger(35, 250)
+		ai = rng:NextInteger(35, 1050)
 	end
 end)
 
@@ -25,12 +25,14 @@ function light(tim, color0, color1)
 	end
 end
 
-	local spawnSound = Instance.new("Sound")
-	spawnSound.Parent = game.Workspace
-	spawnSound.Name = "Spawn"
-	spawnSound.SoundId = "rbxassetid://9114221327"
-	spawnSound.Volume = 10
-	spawnSound:Play()
+local spawnSound = Instance.new("Sound")
+spawnSound.Parent = game.Workspace
+spawnSound.Name = "Spawn"
+spawnSound.SoundId = "rbxassetid://9114221327"
+spawnSound.Volume = 10
+spawnSound:Play()
+
+local delayTime = Random.new():NextInteger(0.01 , 2)
 
 ---====== Load spawner ======---
 
