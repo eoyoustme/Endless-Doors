@@ -131,7 +131,7 @@ entity:SetCallback("OnEnterRoom", function(room: Model, firstTime: boolean)
 			local RunService = game:GetService("RunService")
 			local TweenService = game:GetService("TweenService")
 
-			local entityModel = workspace:FindFirstChild("Rebound")
+			local entityModel = workspace:FindFirstChild("Rebound1")
 			local entityRoot = entityModel and (entityModel:FindFirstChild("HumanoidRootPart") or entityModel:FindFirstChildWhichIsA("BasePart")) 
 
 			if entityRoot then
