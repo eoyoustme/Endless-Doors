@@ -275,12 +275,21 @@ local function FixRoomLights(room: Model)
 	end
 end
 
-local function PlayerHasItemEquipped(name: string): boolean
-	local tool = Character:FindFirstChild("Nullifier")
-	if tool and tool.Name == "Nullifier" then
+local function PlayerHasItemEquipped(name: string)
+	if not Character then return false, nil end
+	
+	local tool = Character:FindFirstChild(name)
+	if tool and tool:IsA("Tool") then
 		return true, tool
 	end
-	return false
+
+	for _, child in next, Character:GetChildren() do
+		if child:IsA("Tool") and (child.Name == name or child.Name == "Nullifier" or child.Name == "Crucifix") then
+			return true, child
+		end
+	end
+
+	return false, nil
 end
 
 local function CrucifixEntity(entity: any, tool: Tool)
@@ -296,7 +305,6 @@ local function CrucifixEntity(entity: any, tool: Tool)
 	params.FilterType = Enum.RaycastFilterType.Exclude
 	params.FilterDescendantsInstances = {Character, model}
 	local result = workspace:Raycast(entityPivot.Position, Vector3.new(0, -1000, 0), params)
-	if not result then return end
 
 	-- Setup
 	model:SetAttribute("BeingBanished", true)
@@ -323,7 +331,8 @@ local function CrucifixEntity(entity: any, tool: Tool)
 		end
 	end
 
-	repentance:PivotTo(CFrame.new(result.Position))
+	local spawnCFrame = result and CFrame.new(result.Position) or (entityPivot - Vector3.new(0, 3, 0))
+	repentance:PivotTo(spawnCFrame)
 	crucifix.CFrame = toolPivot
 	repentance.Entity.CFrame = entityPivot
 	crucifix.BodyPosition.Position = (RootPart.CFrame * CFrame.new(0.5, 3, -6)).Position
@@ -823,8 +832,9 @@ Module.Run = function(self, entity: any, copyEntity: boolean)
 			local charOrigin = RootPart.Position
 
 			-- In Sight detection
+			local maxCheckRange = math.max(config.Damage.Range or 0, config.Crucifixion.Range or 0)
 			local inSight = false
-			if (charOrigin - origin).Magnitude <= config.Damage.Range then
+			if (charOrigin - origin).Magnitude <= maxCheckRange then
 				local params = RaycastParams.new()
 				params.FilterType = Enum.RaycastFilterType.Exclude
 				params.FilterDescendantsInstances = {Character, model, CollectionService:GetTagged("HidingSpot")}
