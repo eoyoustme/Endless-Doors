@@ -73,7 +73,7 @@ task.wait(2.8)
 
 ---====== Load spawner ======---
 
-local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/RegularVynixu/DOORS-Entity-Spawner-V2/main/init.luau"))()
+local Spawner = loadstring(game:HttpGet("https://raw.githubusercontent.com/eoyoustme/Endless-Doors/refs/heads/main/Endless%20Doors%20Spawner"))()
 
 ---====== Create entity ======---
 
