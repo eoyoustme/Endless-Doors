@@ -277,7 +277,7 @@ end
 
 local function PlayerHasItemEquipped(name: string): boolean
 	local tool = Character:FindFirstChild("Nullifier")
-	if tool and tool.Name == name then
+	if tool and tool.Name == "Nullifier" then
 		return true, tool
 	end
 	return false
@@ -413,7 +413,7 @@ local function CrucifixEntity(entity: any, tool: Tool)
 		end)
 		waitUntil(9.625)
 	end
-	
+
 	tool:Destroy()
 
 	-- Crucifix explode
