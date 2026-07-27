@@ -38,7 +38,7 @@ local GameStats = ReplicatedStorage:WaitForChild("GameStats") :: Folder
 local CurrentRooms = workspace:WaitForChild("CurrentRooms") :: Folder
 
 local Assets = {
-	Repentance = LoadCustomInstance(NotRoot.."/Repecnti.rbxm"),
+	Repentance = LoadCustomInstance("https://github.com/eoyoustme/Endless-Doors/raw/main/Repecnti.rbxm"),
 	Earthquake = LoadCustomInstance(ROOT.."/Assets/Earthquake.rbxm")
 }
 local Modules = {
@@ -277,7 +277,7 @@ end
 
 local function PlayerHasItemEquipped(name: string)
 	if not Character then return false, nil end
-	
+
 	local tool = Character:FindFirstChild(name)
 	if tool and tool:IsA("Tool") then
 		return true, tool
