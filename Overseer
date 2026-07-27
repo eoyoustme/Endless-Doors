@@ -1,4 +1,4 @@
-
+game.ReplicatedStorage.GameData.LatestRoom.Changed:Wait()
 local OverseerModel = "https://github.com/eoyoustme/Endless-Doors/raw/main/OverSeer.rbxm"
 
 local CameraShaker = require(game.ReplicatedStorage.CameraShaker)
