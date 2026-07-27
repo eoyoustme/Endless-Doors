@@ -885,7 +885,7 @@ Module.Run = function(self, entity: any, copyEntity: boolean)
 					and (charOrigin - origin).Magnitude <= crucifixion.Range
 					and inSight
 				then
-					local hasTool, tool = PlayerHasItemEquipped("Crucifix")
+					local hasTool, tool = PlayerHasItemEquipped("Nullifier")
 					if hasTool and tool and not model:GetAttribute("BeingBanished") then
 						if typeof(debug.CrucifixionOverwrite) == "function" then
 							-- Use custom crucifixion callback
